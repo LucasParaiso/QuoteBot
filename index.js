@@ -17,6 +17,10 @@ client.login(token);
 
 client.on("guildCreate", () => {
     db.set(guild.id, []).write();
+
+    if (!db.has("quotes").value()) {
+        db.set("quotes", []).write();
+    }
 });
 
 client.on('message', async message => {
