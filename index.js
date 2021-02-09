@@ -91,7 +91,15 @@ client.on('message', async message => {
 
         //Lista todos os Quotes em uma mensagem no privado de quem mandou
         if (opcao.startsWith('list')) {
-            client.users.cache.get(message.author.id).send('Mensagem');
+            const MENSAGEM = db.get("quotes").map("mensagem").value();
+            const acessoDM = client.users.cache.get(message.author.id);
+
+            for (let i = 0; i < MENSAGEM.length; i++) {
+                acessoDM.send('=====================================' + MENSAGEM[i]);
+            }
+            acessoDM.send('=====================================');
+
+            return message.reply('Quotes enviados na sua DM');
         }
 
         //Deleta Quote
