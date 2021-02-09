@@ -78,7 +78,7 @@ client.on('message', async message => {
 
             const embed = new Discord.MessageEmbed()
             .setColor('#f5ff00')
-            .setAuthor('QuoteBot', 'https://cdn.discordapp.com/app-icons/808534981613322240/8d66d8deb855c7b32496abf07d80e14c.png?size=256')
+            .setAuthor('QuoteBot', 'https://cdn.discordapp.com/app-icons/807816311463346186/bc4d018844f78ff87f1c06e710db851c.png?size=256')
             .setDescription(enviar.mensagem);
 
             if (enviar == undefined || enviar.mensagem == "") {
@@ -118,7 +118,7 @@ client.on('message', async message => {
                 if (MENSAGENS[i].length > 1) {
                     const embed = new Discord.MessageEmbed()
                     .setColor('#f5ff00')
-                    .setAuthor('QuoteBot', 'https://cdn.discordapp.com/app-icons/808534981613322240/8d66d8deb855c7b32496abf07d80e14c.png?size=256')
+                    .setAuthor('QuoteBot', 'https://cdn.discordapp.com/app-icons/807816311463346186/bc4d018844f78ff87f1c06e710db851c.png?size=256')
                     .setDescription(MENSAGENS[i]);
 
                     acessoDM.send(embed);
@@ -153,7 +153,7 @@ client.on('message', async message => {
         
         const embed = new Discord.MessageEmbed()
         .setColor('#f5ff00')
-        .setAuthor('QuoteBot', 'https://cdn.discordapp.com/app-icons/808534981613322240/8d66d8deb855c7b32496abf07d80e14c.png?size=256')
+        .setAuthor('QuoteBot', 'https://cdn.discordapp.com/app-icons/807816311463346186/bc4d018844f78ff87f1c06e710db851c.png?size=256')
         .setDescription(enviar.mensagem);
 
         if (enviar == undefined) {
