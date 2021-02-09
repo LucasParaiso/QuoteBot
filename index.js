@@ -26,12 +26,15 @@ client.on("guildCreate", () => {
 client.on('message', async message => {
     if (message.author.bot) return;
 
+    
+
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
 
     //Olá!
 	if (command === 'ola') {
         message.channel.send(`Olá ${message.author}!`);
+
         return;
     } 
 
@@ -60,7 +63,7 @@ client.on('message', async message => {
             let ID = i + 1;
             ID = ID.toString();
 
-            MENSAGEM = `\nQuote #${ID}\n\n` + MENSAGEM;
+            MENSAGEM = `\n**Quote #${ID}**\n\n` + MENSAGEM;
 
             if (eParaCriar) {
                 db.get("quotes").push({
@@ -71,12 +74,17 @@ client.on('message', async message => {
                 db.get("quotes").find({id: ID}).assign({mensagem: MENSAGEM}).write();
             }
 
-            let enviar = db.get("quotes").find({id: ID}).value();
+            const enviar = db.get("quotes").find({id: ID}).value();
+
+            const embed = new Discord.MessageEmbed()
+            .setColor('#f5ff00')
+            .setAuthor('QuoteBot', 'https://cdn.discordapp.com/app-icons/808534981613322240/8d66d8deb855c7b32496abf07d80e14c.png?size=256')
+            .setDescription(enviar.mensagem);
 
             if (enviar == undefined || enviar.mensagem == "") {
                 return message.reply(`Não foi possível criar o Quote #${ID}`);
             } else {
-                return message.reply(enviar.mensagem);
+                return message.reply(embed);
             }
             
         }
@@ -108,12 +116,16 @@ client.on('message', async message => {
 
             for (let i = 0; i < MENSAGENS.length; i++) {
                 if (MENSAGENS[i].length > 1) {
-                    acessoDM.send('=====================================' + MENSAGENS[i]);
+                    const embed = new Discord.MessageEmbed()
+                    .setColor('#f5ff00')
+                    .setAuthor('QuoteBot', 'https://cdn.discordapp.com/app-icons/808534981613322240/8d66d8deb855c7b32496abf07d80e14c.png?size=256')
+                    .setDescription(MENSAGENS[i]);
+
+                    acessoDM.send(embed);
                     vazio = false
                 }
             }
             if (!vazio) {
-                acessoDM.send('=====================================');
                 return message.reply('Quotes enviados na sua DM');
             } else {
                 return message.reply('Nenhum Quote encontrado, Use: quote add <mensagem>');
@@ -139,12 +151,18 @@ client.on('message', async message => {
         let ID = args[0];
         let enviar = db.get('quotes').find({id: ID}).value();
         
+        const embed = new Discord.MessageEmbed()
+        .setColor('#f5ff00')
+        .setAuthor('QuoteBot', 'https://cdn.discordapp.com/app-icons/808534981613322240/8d66d8deb855c7b32496abf07d80e14c.png?size=256')
+        .setDescription(enviar.mensagem);
+
         if (enviar == undefined) {
             return message.reply(`Quote #${ID} não existe use: quote add <mensagem>`);
         } else if (enviar.mensagem == "") {
             return message.reply(`O Quote #${ID} está vazio. Use: quote edit <id> <mensagem>`);  
         } else {
-            return message.reply(enviar.mensagem);
+            return message.reply(embed);
         }
     }
+   
 });
