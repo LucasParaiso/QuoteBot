@@ -35,7 +35,7 @@ client.on('message', async message => {
         let opcao = args[0];
 
         if (opcao == undefined) {
-            return message.reply(`Use: quote [add/edit/del]`);
+            return message.reply(`Use: quote [add/edit/list/del]`);
         }
 
         //Cria Quote - Use: criar <mensagem>
@@ -83,6 +83,11 @@ client.on('message', async message => {
             } else {
                 return message.reply(`Não foi possível editar o Quote #${ID}.`);
             }
+        }
+
+        //Lista todos os Quotes em uma mensagem no privado de quem mandou
+        if (opcao.startsWith('list')) {
+            client.users.cache.get(message.author.id).send('Mensagem');
         }
 
         //Deleta Quote
