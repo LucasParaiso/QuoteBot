@@ -1,4 +1,5 @@
-//adicionar o comando quote listconst Discord = require('discord.js');
+//adicionar o comando quote list
+const Discord = require('discord.js');
 const { prefix, token } = require('./config.json');
 
 const low = require('lowdb');
