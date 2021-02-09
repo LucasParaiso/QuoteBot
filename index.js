@@ -50,7 +50,7 @@ client.on('message', async message => {
                 return message.reply(`Quote já criado, caso queira edita-lo use: editar <id> <mensagem>`)
             }
 
-            MENSAGEM = `Quote #${ID}\n` + MENSAGEM;
+            MENSAGEM = `\nQuote #${ID}\n\n` + MENSAGEM;
 
             db.get("quotes").push({
                 id: ID,
