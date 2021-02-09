@@ -46,28 +46,39 @@ client.on('message', async message => {
         if (opcao.startsWith('ad')) {
             if (!args[1]) return message.reply('Use: quote add <mensagem>');
 
+            let i, eParaCriar = true;
             let MENSAGEM = message.content.slice(10);
+            const verificaMensagem = db.get("quotes").map("mensagem").value();
 
-            let ID = (db.get("quotes").size().value() + 1).toString();
-
-            if (db.get("quotes").find({id: ID}).value() != undefined) {
-                return message.reply(`Quote já criado, caso queira edita-lo use: editar <id> <mensagem>`)
+            for (i = 0; i < verificaMensagem.length; i++) {
+                if (verificaMensagem[i] == "") {
+                    eParaCriar = false;
+                    break;
+                }
             }
+
+            let ID = i + 1;
+            ID = ID.toString();
 
             MENSAGEM = `\nQuote #${ID}\n\n` + MENSAGEM;
 
-            db.get("quotes").push({
-                id: ID,
-                mensagem: MENSAGEM
-            }).write()
+            if (eParaCriar) {
+                db.get("quotes").push({
+                    id: ID,
+                    mensagem: MENSAGEM
+                }).write()
+            } else {
+                db.get("quotes").find({id: ID}).assign({mensagem: MENSAGEM}).write();
+            }
 
             let enviar = db.get("quotes").find({id: ID}).value();
 
-            if (enviar == undefined) {
+            if (enviar == undefined || enviar.mensagem == "") {
                 return message.reply(`Não foi possível criar o Quote #${ID}`);
             } else {
                 return message.reply(enviar.mensagem);
             }
+            
         }
 
         //Edita Quote - Use: editar <id> <mensagem>
@@ -91,15 +102,22 @@ client.on('message', async message => {
 
         //Lista todos os Quotes em uma mensagem no privado de quem mandou
         if (opcao.startsWith('list')) {
-            const MENSAGEM = db.get("quotes").map("mensagem").value();
+            const MENSAGENS = db.get("quotes").map("mensagem").value();
+            let vazio = true;
             const acessoDM = client.users.cache.get(message.author.id);
 
-            for (let i = 0; i < MENSAGEM.length; i++) {
-                acessoDM.send('=====================================' + MENSAGEM[i]);
+            for (let i = 0; i < MENSAGENS.length; i++) {
+                if (MENSAGENS[i].length > 1) {
+                    acessoDM.send('=====================================' + MENSAGENS[i]);
+                    vazio = false
+                }
             }
-            acessoDM.send('=====================================');
-
-            return message.reply('Quotes enviados na sua DM');
+            if (!vazio) {
+                acessoDM.send('=====================================');
+                return message.reply('Quotes enviados na sua DM');
+            } else {
+                return message.reply('Nenhum Quote encontrado, Use: quote add <mensagem>');
+            }
         }
 
         //Deleta Quote
