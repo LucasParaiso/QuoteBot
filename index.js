@@ -148,6 +148,12 @@ client.on('message', async message => {
                     return message.reply(`Não foi possível remover o Quote #${ID}.`)
             }
         }
+
+        //Manda o link para adicionar o bot a um servidor
+        if (opcao.startsWith('link')) {
+            message.channel.send('https://discord.com/oauth2/authorize?client_id=807816311463346186&scope=bot');
+        }
+
         let ID = args[0];
         let enviar = db.get('quotes').find({id: ID}).value();
         
