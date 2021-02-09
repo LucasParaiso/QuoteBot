@@ -95,7 +95,7 @@ client.on('message', async message => {
 
             let MENSAGEM = message.content.slice(13), ID = args[1];
 
-            MENSAGEM = `Quote #${ID}\n` + MENSAGEM;
+            MENSAGEM = `\n**Quote #${ID}**\n\n` + MENSAGEM;
 
             db.get("quotes").find({id: ID}).assign({mensagem: MENSAGEM}).write();
 
