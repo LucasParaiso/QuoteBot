@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+//adicionar o comando quote listconst Discord = require('discord.js');
 const { prefix, token } = require('./config.json');
 
 const low = require('lowdb');
@@ -38,7 +38,6 @@ client.on('message', async message => {
         }
 
         //Cria Quote - Use: criar <mensagem>
-        //***Não funciona direito com mais de uma palavra***
         if (opcao.startsWith('ad')) {
             if (!args[1]) return message.reply('Use: quote add <mensagem>');
 
