@@ -149,6 +149,13 @@ client.on('message', async message => {
             }
         }
 
+        //Mostra todos os comandos e suas utilizacoes
+        if (opcao.startsWith('help')) {
+            const mensagem = '```md\n1. quote add <mensagem>       : < Adiciona um quote com a mensagem >\n2. quote edit <id> <mensagem> : < Edita um quote ja existente >\n3. quote list                 : < Lista todos os quotes no privado >\n4. quote del <id>             : < Deleta um quote existente >\n5. quote <id>                 : < Mostra o quote no chat >\n6. ola                        : < O bot e educado! >\n```'
+
+            return message.reply(mensagem);
+        }
+
         //Manda o link para adicionar o bot a um servidor
         if (opcao.startsWith('link')) {
             message.channel.send('https://discord.com/oauth2/authorize?client_id=807816311463346186&scope=bot');
