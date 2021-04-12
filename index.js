@@ -114,9 +114,11 @@ client.on('message', async message => {
             data = data.split(" ")
             data[4] = data[3]
             data[3] = "às"
-            
             acessoDM.send('Quotes enviados em **`' + data.toString().replace(/,/g, ' ') + '`**')
-            acessoDM.send(MENSAGENS);
+
+            for (let i = 0; i < MENSAGENS.length; i++) {
+                acessoDM.send(enviaEmbed(MENSAGENS[i]))
+            }
 
             return message.reply('Quotes enviados na sua DM');
         }
@@ -183,6 +185,16 @@ function enviaMensagem(ID) {
     .setColor('#f5ff00')
     .setAuthor('QuoteBot', 'https://i.pinimg.com/originals/4d/59/75/4d5975b1a506f5b5f3bafe158e3ad260.jpg')
     .setDescription(enviar.mensagem);
+
+    return embed
+}
+
+function enviaEmbed(quote) {
+
+    const embed = new Discord.MessageEmbed()
+    .setColor('#f5ff00')
+    .setAuthor('QuoteBot', 'https://i.pinimg.com/originals/4d/59/75/4d5975b1a506f5b5f3bafe158e3ad260.jpg')
+    .setDescription(quote);
 
     return embed
 }
