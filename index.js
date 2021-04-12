@@ -26,8 +26,6 @@ client.on("guildCreate", () => {
 client.on('message', async message => {
     if (message.author.bot) return;
 
-    
-
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
 
@@ -44,6 +42,8 @@ client.on('message', async message => {
         if (opcao == undefined) {
             return message.reply(`Use: quote [add/edit/list/del]`);
         }
+
+        const itens = db.get('quotes').value().length
 
         //Cria Quote - Use: criar <mensagem>
         if (opcao.startsWith('ad')) {
@@ -76,15 +76,10 @@ client.on('message', async message => {
 
             const enviar = db.get("quotes").find({id: ID}).value();
 
-            const embed = new Discord.MessageEmbed()
-            .setColor('#f5ff00')
-            .setAuthor('QuoteBot', 'https://i.pinimg.com/originals/7b/07/13/7b0713b4d35d346f7caf519a15dba9ad.png')
-            .setDescription(enviar.mensagem);
-
             if (enviar == undefined || enviar.mensagem == "") {
                 return message.reply(`Não foi possível criar o Quote #${ID}`);
             } else {
-                return message.reply(embed);
+                return message.reply(enviaMensagem(ID));
             }
             
         }
@@ -95,14 +90,15 @@ client.on('message', async message => {
 
             let MENSAGEM = message.content.slice(13), ID = args[1];
 
-            MENSAGEM = `\n**Quote #${ID}**\n\n` + MENSAGEM;
+            MENSAGEM = `**Quote #${ID}**\n` + MENSAGEM;
 
             db.get("quotes").find({id: ID}).assign({mensagem: MENSAGEM}).write();
 
             let editou = db.get("quotes").find({id: ID}).value();
 
             if (editou.mensagem == MENSAGEM) {
-                return message.reply(`Quote #${ID} editado com sucesso!`);
+                message.reply(`Quote #${ID} editado com sucesso!`);
+                return message.reply(enviaMensagem(ID))
             } else {
                 return message.reply(`Não foi possível editar o Quote #${ID}.`);
             }
@@ -118,7 +114,7 @@ client.on('message', async message => {
                 if (MENSAGENS[i].length > 1) {
                     const embed = new Discord.MessageEmbed()
                     .setColor('#f5ff00')
-                    .setAuthor('QuoteBot', 'https://i.pinimg.com/originals/7b/07/13/7b0713b4d35d346f7caf519a15dba9ad.png')
+                    .setAuthor('QuoteBot', 'https://i.pinimg.com/originals/4d/59/75/4d5975b1a506f5b5f3bafe158e3ad260.jpg')
                     .setDescription(MENSAGENS[i]);
 
                     acessoDM.send(embed);
@@ -161,21 +157,39 @@ client.on('message', async message => {
             message.channel.send('https://discord.com/oauth2/authorize?client_id=807816311463346186&scope=bot');
         }
 
-        let ID = args[0];
-        let enviar = db.get('quotes').find({id: ID}).value();
-        
-        const embed = new Discord.MessageEmbed()
-        .setColor('#f5ff00')
-        .setAuthor('QuoteBot', 'https://i.pinimg.com/originals/7b/07/13/7b0713b4d35d346f7caf519a15dba9ad.png')
-        .setDescription(enviar.mensagem);
+        //Sortea um quote
+        if (opcao.startsWith('alea') || opcao.startsWith('sort')) {
+            let ID = Math.floor(Math.random() * (itens)) + 1
+            let Sorteado = db.get('quotes').find({id: ID.toString()}).value()
+            
+            let aleatorio = new Discord.MessageEmbed()
+            .setColor('#f5ff00')
+            .setAuthor('QuoteBot', 'https://i.pinimg.com/originals/4d/59/75/4d5975b1a506f5b5f3bafe158e3ad260.jpg')
+            .setDescription(Sorteado.mensagem);
 
-        if (enviar == undefined) {
-            return message.reply(`Quote #${ID} não existe use: quote add <mensagem>`);
-        } else if (enviar.mensagem == "") {
-            return message.reply(`O Quote #${ID} está vazio. Use: quote edit <id> <mensagem>`);  
-        } else {
-            return message.reply(embed);
+            message.reply(aleatorio)
+        }
+
+        //Manda o quote requisitado
+        if (opcao >= 1 && opcao <= itens) {
+            return message.reply(enviaMensagem(args[0]))
         }
     }
-   
 });
+
+function enviaMensagem(ID) {
+    let enviar = db.get('quotes').find({id: ID}).value();
+    
+    if (enviar == undefined) {
+        return message.reply(`Quote #${ID} não existe use: quote add <mensagem>`);
+    } else if (enviar.mensagem == "") {
+        return message.reply(`O Quote #${ID} está vazio. Use: quote edit <id> <mensagem>`);
+    }
+
+     const embed = new Discord.MessageEmbed()
+    .setColor('#f5ff00')
+    .setAuthor('QuoteBot', 'https://i.pinimg.com/originals/4d/59/75/4d5975b1a506f5b5f3bafe158e3ad260.jpg')
+    .setDescription(enviar.mensagem);
+
+    return embed
+}
