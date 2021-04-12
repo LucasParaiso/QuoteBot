@@ -173,8 +173,8 @@ client.on('message', async message => {
         //Envia o arquivo quote.json
         if (opcao.startsWith('down')) {
             const acessoDM = client.users.cache.get(message.author.id);
-
             acessoDM.send("Lista de Quotes", { files: ["./quote.json"] });
+            return message.reply('Quotes enviados na sua DM');
         }
     }
 });
