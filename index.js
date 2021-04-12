@@ -40,7 +40,7 @@ client.on('message', async message => {
         let opcao = args[0];
 
         if (opcao == undefined) {
-            return message.reply(`Use: quote [add/edit/list/del]`);
+            return message.reply(`Use: quote [add/edit/list/download/del]`);
         }
 
         const itens = db.get('quotes').value().length
