@@ -169,6 +169,11 @@ client.on('message', async message => {
         if (opcao >= 1 && opcao <= itens) {
             return message.reply(enviaMensagem(args[0]))
         }
+
+        //Envia o arquivo quote.json
+        if (opcao.startsWith('down')) {
+            message.channel.send("Testing message.", { files: ["./quote.json"] });
+        }
     }
 });
 
