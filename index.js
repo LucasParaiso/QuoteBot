@@ -172,7 +172,9 @@ client.on('message', async message => {
 
         //Envia o arquivo quote.json
         if (opcao.startsWith('down')) {
-            message.channel.send("Testing message.", { files: ["./quote.json"] });
+            const acessoDM = client.users.cache.get(message.author.id);
+
+            acessoDM.send("Lista de Quotes", { files: ["./quote.json"] });
         }
     }
 });
