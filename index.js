@@ -90,7 +90,7 @@ client.on('message', async message => {
 
             let MENSAGEM = message.content.slice(13), ID = args[1];
 
-            MENSAGEM = `**Quote #${ID}**\n` + MENSAGEM;
+            MENSAGEM = `\n**Quote #${ID}**\n\n` + MENSAGEM;
 
             db.get("quotes").find({id: ID}).assign({mensagem: MENSAGEM}).write();
 
@@ -107,25 +107,18 @@ client.on('message', async message => {
         //Lista todos os Quotes em uma mensagem no privado de quem mandou
         if (opcao.startsWith('list')) {
             const MENSAGENS = db.get("quotes").map("mensagem").value();
-            let vazio = true;
             const acessoDM = client.users.cache.get(message.author.id);
+            
+            const Data = new Date()
+            let data = Data.toLocaleDateString('pt-br', {month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric'})
+            data = data.split(" ")
+            data[4] = data[3]
+            data[3] = "às"
+            
+            acessoDM.send('Quotes enviados em **`' + data.toString().replace(/,/g, ' ') + '`**')
+            acessoDM.send(MENSAGENS);
 
-            for (let i = 0; i < MENSAGENS.length; i++) {
-                if (MENSAGENS[i].length > 1) {
-                    const embed = new Discord.MessageEmbed()
-                    .setColor('#f5ff00')
-                    .setAuthor('QuoteBot', 'https://i.pinimg.com/originals/4d/59/75/4d5975b1a506f5b5f3bafe158e3ad260.jpg')
-                    .setDescription(MENSAGENS[i]);
-
-                    acessoDM.send(embed);
-                    vazio = false
-                }
-            }
-            if (!vazio) {
-                return message.reply('Quotes enviados na sua DM');
-            } else {
-                return message.reply('Nenhum Quote encontrado, Use: quote add <mensagem>');
-            }
+            return message.reply('Quotes enviados na sua DM');
         }
 
         //Deleta Quote
