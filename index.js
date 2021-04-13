@@ -38,59 +38,26 @@ client.on("message", async (message) => {
 
   const args = message.content.slice(prefix.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
-  const itens = db.get("quotes").value().length;
+  const command =
+    client.commands.get(commandName) ||
+    client.commands.find(
+      (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
+    );
 
-  /*if (Number.isInteger(parseInt(commandName))) {
-    if (commandName >= 0 && commandName <= itens) {
-        console.log(commandName)
-      return message.reply(enviaMensagem(commandName));
-    } else {
-      return message.reply("Quote não existente");
+  if (!command) return;
+
+  if (command.args && !args.length) {
+    let reply = `Informações insuficientes, `;
+    if (command.usage) {
+      reply += `\nUse: \`${prefix}${command.name} ${command.usage}\``;
     }
-  } else {*/
-    const command =
-      client.commands.get(commandName) ||
-      client.commands.find(
-        (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
-      );
+    return message.channel.send(reply);
+  }
 
-    if (!command) return;
-
-    if (command.args && !args.length) {
-      let reply = `Informações insuficientes, `;
-      if (command.usage) {
-        reply += `\nUse: \`${prefix}${command.name} ${command.usage}\``;
-      }
-      return message.channel.send(reply);
-    }
-
-    try {
-      command.execute(message, args, client);
-    } catch (error) {
-      console.error(error);
-      message.reply("Houve um erro na execução desse comando!");
-    }
-  /*}*/
-
-  function enviaMensagem(ID) {
-    let enviar = db.get("quotes").find({ id: ID }).value();
-
-    if (enviar == undefined) {
-      return message.reply(`Quote #${ID} não existe use: quote add <mensagem>`);
-    } else if (enviar.mensagem == "") {
-      return message.reply(
-        `O Quote #${ID} está vazio. Use: quote edit <id> <mensagem>`
-      );
-    }
-
-    const embed = new Discord.MessageEmbed()
-      .setColor("#f5ff00")
-      .setAuthor(
-        "QuoteBot",
-        "https://i.pinimg.com/originals/4d/59/75/4d5975b1a506f5b5f3bafe158e3ad260.jpg"
-      )
-      .setDescription(enviar.mensagem);
-
-    return embed;
+  try {
+    command.execute(message, args, client);
+  } catch (error) {
+    console.error(error);
+    message.reply("Houve um erro na execução desse comando!");
   }
 });
