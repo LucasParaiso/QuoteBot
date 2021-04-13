@@ -40,9 +40,8 @@ client.on("message", async (message) => {
   const prefixo = args.shift();
   const commandName = args.shift().toLowerCase();
 
-  if (parseInt(commandName)) {
-    return message.reply(enviaMensagem(commandName));
-  }
+  if (prefixo !== prefix) return;
+  if (parseInt(commandName)) return message.reply(enviaMensagem(commandName));  
 
   const command =
     client.commands.get(commandName) ||
