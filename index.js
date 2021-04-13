@@ -37,11 +37,12 @@ client.on("message", async (message) => {
   if (message.author.bot) return;
 
   const args = message.content.split(/ +/);
-  const prefixo = args.shift();
+  const prefixo = args.shift() + " ";
   const commandName = args.shift().toLowerCase();
 
-  if (prefixo !== prefix) return;
-  if (parseInt(commandName)) return message.reply(enviaMensagem(commandName));  
+  if (prefixo != prefix) return;
+
+  if (parseInt(commandName)) return message.reply(enviaMensagem(commandName));
 
   const command =
     client.commands.get(commandName) ||
