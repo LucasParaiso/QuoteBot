@@ -27,21 +27,15 @@ module.exports = {
     acessoDM.send(
       "Quotes enviados em **`" + data.toString().replace(/,/g, " ") + "`**"
     );
-
+    let enviar = []
+        
     for (let i = 0; i < MENSAGENS.length; i++) {
       if (MENSAGENS[i] != "") {
-        let embed = new Discord.MessageEmbed()
-          .setColor("#f5ff00")
-          .setAuthor(
-            "QuoteBot",
-            "https://i.pinimg.com/originals/4d/59/75/4d5975b1a506f5b5f3bafe158e3ad260.jpg"
-          )
-          .setDescription(MENSAGENS[i]);
-
-        acessoDM.send(embed);
+        enviar += '\n\n--------------------\n'
+        enviar += MENSAGENS[i]
       }
     }
-
+    acessoDM.send(enviar, { split: true })
     return message.reply("Quotes enviados na sua DM");
   },
 };
