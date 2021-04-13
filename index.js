@@ -61,11 +61,6 @@ client.on("message", async (message) => {
     message.reply("Houve um erro na execução desse comando!");
   }
 
-  /*Manda o quote requisitado
-    if (opcao >= 1 && opcao <= itens) {
-      return message.reply(enviaMensagem(args[0]));
-    }*/
-
   function enviaMensagem(ID) {
     let enviar = db.get("quotes").find({ id: ID }).value();
 
