@@ -1,11 +1,15 @@
 module.exports = {
   name: "add",
   description: "Adiciona um quote com a mensagem enviada",
-  args: true,
-  usage: '<Mensagem>',
-  aliases: ['adicionar', 'criar'],
-  execute(message, args, db) {
-    const func = require('../index')
+  usage: "<Mensagem>",
+  aliases: ["adicionar", "criar"],
+  execute(message, args) {
+    const Discord = require("discord.js");
+    const low = require("../node_modules/lowdb");
+    const FileSync = require("../node_modules/lowdb/adapters/FileSync");
+    const adapter = new FileSync("quote.json");
+    const db = low(adapter);
+
     if (!args[0]) return message.reply("Use: quote add <mensagem>");
 
     let i,
@@ -36,12 +40,30 @@ module.exports = {
       db.get("quotes").find({ id: ID }).assign({ mensagem: MENSAGEM }).write();
     }
 
-    const enviar = db.get("quotes").find({ id: ID }).value();
+    return message.channel.send(enviaMensagem(ID))
 
-    if (enviar == undefined || enviar.mensagem == "") {
-      return message.reply(`Não foi possível criar o Quote #${ID}`);
-    } else {
-      return message.reply(func.enviaMensagem(ID));
+    function enviaMensagem(ID) {
+      let enviar = db.get("quotes").find({ id: ID }).value();
+
+      if (enviar == undefined) {
+        return message.reply(
+          `Quote #${ID} não existe use: quote add <mensagem>`
+        );
+      } else if (enviar.mensagem == "") {
+        return message.reply(
+          `O Quote #${ID} está vazio. Use: quote edit <id> <mensagem>`
+        );
+      }
+
+      const embed = new Discord.MessageEmbed()
+        .setColor("#f5ff00")
+        .setAuthor(
+          "QuoteBot",
+          "https://i.pinimg.com/originals/4d/59/75/4d5975b1a506f5b5f3bafe158e3ad260.jpg"
+        )
+        .setDescription(enviar.mensagem);
+
+      return embed;
     }
   },
 };

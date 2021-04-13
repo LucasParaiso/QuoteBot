@@ -1,4 +1,3 @@
-//adicionar o comando quote list
 const fs = require("fs");
 const Discord = require("discord.js");
 const { prefix, token } = require("./config.json");
@@ -39,27 +38,39 @@ client.on("message", async (message) => {
 
   const args = message.content.slice(prefix.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
-
-  const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
-
-  if(!command) return;
-
-  if (command.args && !args.length) {
-    let reply = `Informações insuficientes, `;
-    if (command.usage) {
-      reply += `\nUse: \`${prefix}${command.name} ${command.usage}\``;
-    }
-    return message.channel.send(reply);
-  }
-
   const itens = db.get("quotes").value().length;
 
-  try {
-    command.execute(message, args);
-  } catch (error) {
-    console.error(error);
-    message.reply("Houve um erro na execução desse comando!");
-  }
+  /*if (Number.isInteger(parseInt(commandName))) {
+    if (commandName >= 0 && commandName <= itens) {
+        console.log(commandName)
+      return message.reply(enviaMensagem(commandName));
+    } else {
+      return message.reply("Quote não existente");
+    }
+  } else {*/
+    const command =
+      client.commands.get(commandName) ||
+      client.commands.find(
+        (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
+      );
+
+    if (!command) return;
+
+    if (command.args && !args.length) {
+      let reply = `Informações insuficientes, `;
+      if (command.usage) {
+        reply += `\nUse: \`${prefix}${command.name} ${command.usage}\``;
+      }
+      return message.channel.send(reply);
+    }
+
+    try {
+      command.execute(message, args, client);
+    } catch (error) {
+      console.error(error);
+      message.reply("Houve um erro na execução desse comando!");
+    }
+  /*}*/
 
   function enviaMensagem(ID) {
     let enviar = db.get("quotes").find({ id: ID }).value();
@@ -79,18 +90,6 @@ client.on("message", async (message) => {
         "https://i.pinimg.com/originals/4d/59/75/4d5975b1a506f5b5f3bafe158e3ad260.jpg"
       )
       .setDescription(enviar.mensagem);
-
-    return embed;
-  }
-
-  function enviaEmbed(quote) {
-    const embed = new Discord.MessageEmbed()
-      .setColor("#f5ff00")
-      .setAuthor(
-        "QuoteBot",
-        "https://i.pinimg.com/originals/4d/59/75/4d5975b1a506f5b5f3bafe158e3ad260.jpg"
-      )
-      .setDescription(quote);
 
     return embed;
   }

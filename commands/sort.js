@@ -1,7 +1,16 @@
 module.exports = {
   name: "sortear",
+  aliases: ['sort', 'aleatorio', 'random', 'rand'],
   description: "Quote aleatório",
+  usage: ' ',
   execute(message, args) {
+    const Discord = require("discord.js");
+    const low = require("../node_modules/lowdb");
+    const FileSync = require("../node_modules/lowdb/adapters/FileSync");
+    const adapter = new FileSync("quote.json");
+    const db = low(adapter);
+
+    let itens = db.get("quotes").value().length;
     let ID = Math.floor(Math.random() * itens) + 1;
     let Sorteado = db.get("quotes").find({ id: ID.toString() }).value();
 

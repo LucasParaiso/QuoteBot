@@ -1,10 +1,18 @@
 module.exports = {
-  name: "delete",
+  name: "del",
+  aliases: ["delete", "deletar"],
   description: "Deleta um quote",
+  usage: ' ',
   execute(message, args) {
-    if (!args[1]) return message.reply("Use: quote del <id>");
+    const Discord = require("discord.js");
+    const low = require("lowdb");
+    const FileSync = require("lowdb/adapters/FileSync");
+    const adapter = new FileSync("quote.json");
+    const db = low(adapter);
 
-    let ID = args[1];
+    if (!args[0]) return message.reply("Use: quote del <id>");
+
+    let ID = args[0];
 
     db.get("quotes").find({ id: ID }).assign({ mensagem: "" }).write();
 
