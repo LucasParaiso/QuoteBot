@@ -36,8 +36,14 @@ for (const file of commandFiles) {
 client.on("message", async (message) => {
   if (message.author.bot) return;
 
-  const args = message.content.slice(prefix.length).trim().split(/ +/);
+  const args = message.content.split(/ +/);
+  const prefixo = args.shift();
   const commandName = args.shift().toLowerCase();
+
+  if (parseInt(commandName)) {
+    return message.reply(enviaMensagem(commandName));
+  }
+
   const command =
     client.commands.get(commandName) ||
     client.commands.find(
@@ -59,5 +65,25 @@ client.on("message", async (message) => {
   } catch (error) {
     console.error(error);
     message.reply("Houve um erro na execução desse comando!");
+  }
+
+  function enviaMensagem(ID) {
+    const enviar = db.get("quotes").find({ id: ID }).value();
+
+    if (enviar == undefined) {
+      return `Quote #${ID} não existe use: quote add <mensagem>`;
+    } else if (enviar.mensagem == "") {
+      return `O Quote #${ID} está vazio. Use: quote edit <id> <mensagem>`;
+    }
+
+    const embed = new Discord.MessageEmbed()
+      .setColor("#f5ff00")
+      .setAuthor(
+        "QuoteBot",
+        "https://i.pinimg.com/originals/4d/59/75/4d5975b1a506f5b5f3bafe158e3ad260.jpg"
+      )
+      .setDescription(enviar.mensagem);
+
+    return embed;
   }
 });

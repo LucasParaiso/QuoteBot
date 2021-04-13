@@ -14,8 +14,6 @@ module.exports = {
       let tam = commands.size;
       data.push(commands.map((command) => command.name).join(","));
 
-        console.log()
-
       let dataSplit = data[1].split(","), mensagem = [];
       for (let i = 0; i < tam; i++) {
         let nome = commands.get(dataSplit[i]) || commands.find((c) => c.aliases && c.aliases.includes(dataSplit[i]));
@@ -35,7 +33,7 @@ module.exports = {
         })
         .catch((error) => {
           console.error(
-            `Nao foi possivel mandar uma DM para ${message.author.tag}.\n`,
+            `Nao foi possivel mandar um DM para ${message.author.tag}.\n`,
             error
           );
           message.reply(
