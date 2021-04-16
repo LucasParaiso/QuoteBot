@@ -1,6 +1,6 @@
 module.exports = {
   name: "sortear",
-  aliases: ['sort', 'aleatorio', 'random', 'rand'],
+  aliases: ['sort', 'aleatorio', 'random', 'rand', 's'],
   description: "Quote aleatório",
   usage: ' ',
   execute(message, args) {
